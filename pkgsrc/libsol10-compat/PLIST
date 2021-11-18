@@ -1,0 +1,20 @@
+@comment $NetBSD$
+bin/libsol10_compat_patch_pkgsrc
+include/libsol10-compat/dirent.h
+include/libsol10-compat/endian.h
+include/libsol10-compat/err.h
+include/libsol10-compat/fcntl.h
+include/libsol10-compat/libsol10-compat-config.h
+include/libsol10-compat/stdio.h
+include/libsol10-compat/stdlib.h
+include/libsol10-compat/string.h
+include/libsol10-compat/strings.h
+include/libsol10-compat/syslog.h
+include/libsol10-compat/sys/feature_tests.h
+include/libsol10-compat/sys/file.h
+include/libsol10-compat/sys/random.h
+include/libsol10-compat/time.h
+include/libsol10-compat/unistd.h
+lib/libsol10_compat.la
+lib/pkgconfig/libsol10-compat.pc
+share/doc/libsol10-compat/README

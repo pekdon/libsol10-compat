@@ -1,0 +1,35 @@
+audio/cdparanoia
+audio/id3
+# dirfd
+audio/pulseuadio
+devel/at-spi2-core
+devel/distcc
+devel/libdazzle
+# posix_memalign
+graphics/MesaLib
+graphics/gd
+graphics/gdk-pixbuf2
+graphics/gdk-pixbuf2-xlib
+graphics/graphviz
+graphics/imlib2
+graphics/libepoxy
+lang/nodejs
+# timegm
+math/nickle
+multimedia/david
+multimedia/mpv
+multimedia/x265
+net/glib-networking
+print/poppler
+print/poppler-glib
+print/poppler-utils
+security/gcr
+security/polkit
+sysutils/consolekit
+www/epiphany
+www/webkit-gtk
+x11/gtk3
+x11/libdrm
+x11/libxkbcommon
+x11/qt5-webkit
+x11/xsm

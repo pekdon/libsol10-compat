@@ -1,0 +1,14 @@
+README
+
+Solaris compatability library for supporting compilation of modern software.
+
+libsol10-compat comes with pkg-config support.
+
+If using without pkg-config, activating compatability support is a matter of
+updating the include path and linking with the libsol10_compat library
+
+CFLAGS+="-I/usr/local/include/libsol10-compat"
+LDFLAGS+="-L/usr/local/lib -lsol10_compat"
+
+For C++ code, open macro is not defined unless the LIBSOL10_COMPAT_ENABLE_MACROS
+is defined to avoid issues with C++ classes having their open methods renamed.
