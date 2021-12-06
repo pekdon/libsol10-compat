@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <limits.h>
 
-#define BUF_INC 128
+#define BUF_INC 16
 
 #ifndef LIBSOL10_COMPAT_HAVE_GETDELIM
 ssize_t getdelim(char **lineptr, size_t *n, int delimiter, FILE *restrict fp)
@@ -30,6 +30,7 @@ ssize_t getdelim(char **lineptr, size_t *n, int delimiter, FILE *restrict fp)
 	for (;;) {
 		c = getc(fp);
 		if (ferror(fp) || (c == EOF && cur_pos == *lineptr)) {
+		    *cur_pos = '\0';
 		    return -1;
 		}
 

@@ -2,18 +2,21 @@
 #define _GNU_SOURCE
 #endif /* _GNU_SOURCE */
 
+#include <sys/file.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/random.h>
 #include <assert.h>
 #include <dirent.h>
 #include <endian.h>
 #include <err.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <sys/random.h>
 #include <time.h>
-#include <sys/fcntl.h>
 #include <unistd.h>
 
 void test_dirent(void)
@@ -28,12 +31,14 @@ void test_dirent(void)
 
 void test_endian(void)
 {
+#ifdef __BYTE_ORDER
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	assert(__BYTE_ORDER == __LITTLE_ENDIAN);
 	assert(__BYTE_ORDER != __BIG_ENDIAN);
 #else
 	assert(__BYTE_ORDER != __LITTLE_ENDIAN);
 	assert(__BYTE_ORDER == __BIG_ENDIAN);
+#endif
 #endif
 }
 
@@ -54,13 +59,76 @@ void test_fcntl(void)
 void test_stdio(void)
 {
 	/* getdelim */
+	{
+		size_t linecapp = 0;
+		char *line = NULL;
+		FILE *fp = fopen("data/getdelim.data", "r");
+		assert(fp);
+
+		/* initial alloc test */
+		assert(11 == getdelim(&line, &linecapp, ',', fp));
+		assert(0 == strcmp(line, "0123456789,"));
+		assert(linecapp > 11);
+
+		/* same buffer test */
+		size_t old_linecapp = linecapp;
+		assert(11 == getdelim(&line, &linecapp, '\n', fp));
+		assert(0 == strcmp(line, "abcdefghij\n"));
+		assert(old_linecapp == linecapp);
+
+		/* grow buffer test */
+		assert(101 == getdelim(&line, &linecapp, '\n', fp));
+		assert(0 == strcmp(line, "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\n"));
+		assert(linecapp >= old_linecapp);
+
+		/* until EOF test */
+		old_linecapp = linecapp;
+		assert(6 == getdelim(&line, &linecapp, '!', fp));
+		assert(0 == strcmp(line, "short\n"));
+		assert(old_linecapp == linecapp);
+
+		/* until EOF test, not assert NUL terminated line, implementation
+                   dependent. */
+		assert(-1 == getdelim(&line, &linecapp, '\n', fp));
+		assert(old_linecapp == linecapp);
+
+		fclose(fp);
+		free(line);
+	}
 
 	/* getline */
+	{
+		size_t linecapp = 80;
+		char *line = malloc(linecapp);
+		FILE *fp = fopen("data/getline.data", "r");
+		assert(fp);
+
+		/* re-use buffer */
+		assert(11 == getline(&line, &linecapp, fp));
+		assert(0 == strcmp(line, "0123456789\n"));
+		assert(80 == linecapp);
+
+		/* EOF test, not assert NUL terminated line, implementation
+                   dependent. */
+		assert(-1 == getline(&line, &linecapp, fp));
+		assert(80 == linecapp);
+
+		fclose(fp);
+		free(line);
+	}
 }
 
 void test_stdlib(void)
 {
 	/* posix_memalign */
+	{
+		void *mem;
+		for (int i = 0; i < 64; i++) {
+			assert(0 == posix_memalign(&mem, sizeof(void*), i));
+			assert(0 == (((uint64_t) mem) % sizeof(void*)));
+			free(mem);
+		}
+	}
 }
 
 void test_string(void)
@@ -117,9 +185,64 @@ void test_strings(void)
 	assert(115 == strncasecmp("test", "te", 5));
 }
 
+static void test_sys_file_child(int pfd[], int op)
+{
+	int fd = open("data/flock", O_RDWR|O_CREAT, 0664);
+	assert(fd > -1);
+	int tmp;
+	assert(sizeof(int) == read(pfd[0], &tmp, sizeof(int)));
+	printf("waiting for lock %d\n", getpid());
+	flock(fd, op);
+	printf("locked %d\n", getpid());
+	assert(sizeof(int) == write(pfd[1], &tmp, sizeof(int)));
+	assert(sizeof(int) == read(pfd[0], &tmp, sizeof(int)));
+	sleep(1);
+	flock(fd, LOCK_UN);
+	printf("unlocked %d\n", getpid());
+	assert(sizeof(int) == write(pfd[1], &tmp, sizeof(int)));
+	close(fd);
+	write(pfd[1], &fd, sizeof(int));
+	close(pfd[1]);
+	exit(0);
+}
+
 void test_sys_file(void)
 {
 	/* flock */
+	int p1[2];
+	assert(0 == pipe(p1));
+	pid_t c1 = fork();
+	assert(c1 > -1);
+	if (c1 == 0) {
+		test_sys_file_child(p1, LOCK_EX);
+	}
+	int p2[2];
+	assert(0 == pipe(p2));
+	pid_t c2 = fork();
+	assert(c2 > -1);
+	if (c2 == 0) {
+		test_sys_file_child(p2, LOCK_EX);
+	}
+
+	/* c1 and c2 waiting for flock */
+	int tmp = 0;
+	assert(sizeof(int) == write(p1[1], &tmp, sizeof(int)));
+	/* locked, after read succeeds */
+	assert(sizeof(int) == read(p1[0], &tmp, sizeof(int)));
+	/* try to grab lock, blocks */
+	assert(sizeof(int) == write(p2[1], &tmp, sizeof(int)));
+	/* signal unlock */
+	assert(sizeof(int) == write(p1[1], &tmp, sizeof(int)));
+	/* locked, after read succeeds */
+	assert(sizeof(int) == read(p2[0], &tmp, sizeof(int)));
+	/* signal unlock */
+	assert(sizeof(int) == write(p2[1], &tmp, sizeof(int)));
+
+	int c1_ret, c2_ret;
+	assert(c1 == waitpid(c1, &c1_ret, 0));
+	assert(c2 == waitpid(c2, &c2_ret, 0));
+	assert(0 == WEXITSTATUS(c1_ret));
+	assert(0 == WEXITSTATUS(c2_ret));
 }
 
 void test_sys_random(void)

@@ -1,11 +1,12 @@
-AC_INIT([libsol10-compat], [0.1.0], [pekdon@gmail.com])
+AC_INIT([libsol10-compat],[0.1.0],[pekdon@gmail.com])
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([])
 LT_INIT([])
 AC_PROG_CC
+AC_PROG_CC_C99
 
 AC_CHECK_HEADER([sys/file.h],
-		[loc_sys_file='#define LIBSOL10_COMPAT_HAVE_SYS_FILE_H 1'],
+		[loc_sys_file_h='#define LIBSOL10_COMPAT_HAVE_SYS_FILE_H 1'],
 		[])
 AC_CHECK_HEADER([sys/random.h],
 		[loc_sys_random_h='#define LIBSOL10_COMPAT_HAVE_SYS_RANDOM_H 1'],
@@ -17,8 +18,12 @@ AC_CHECK_HEADER([err.h],
 AC_CHECK_HEADER([strings.h],
 		[loc_strings_h='#define LIBSOL10_COMPAT_HAVE_STRINGS_H 1'], [])
 
-AC_CHECK_FUNC([dirfd],
-	      [loc_dirfd='#define LIBSOL10_COMPAT_HAVE_DIRFD 1'], [])
+AC_CHECK_FUNC([dirfd], [dirfd_func=yes], [dirfd_fund=no])
+AX_CHECK_DEFINE([dirent.h], [dirfd], [dirfd_macro=yes], [dirfd_macro=no])
+if test "x${dirfd_func}" = "xyes" -o "x${dirfd_macro}" = "xyes"; then
+	loc_dirfd='#define LIBSOL10_COMPAT_HAVE_DIRFD 1'
+fi
+
 AC_CHECK_FUNC([getdelim],
 	      [loc_getdelim='#define LIBSOL10_COMPAT_HAVE_GETDELIM 1'], [])
 AC_CHECK_FUNC([getline],
@@ -34,6 +39,8 @@ AC_CHECK_FUNC([strncasecmp],
 	      [loc_strncasecmp='#define LIBSOL10_COMPAT_HAVE_STRNCASECMP 1'], [])
 AC_CHECK_FUNC([strcasestr],
 	      [loc_strcasestr='#define LIBSOL10_COMPAT_HAVE_STRCASESTR 1'], [])
+AC_CHECK_FUNC([strlcat],
+	      [loc_strlcat='#define LIBSOL10_COMPAT_HAVE_STRLCAT 1'], [])
 AC_CHECK_FUNC([memmem],
 	      [loc_memmem='#define LIBSOL10_COMPAT_HAVE_MEMMEM 1'], [])
 AC_CHECK_FUNC([flock],
@@ -50,6 +57,7 @@ AC_CHECK_FUNC([readlinkat],
 	      [loc_readlinkat='#define LIBSOL10_COMPAT_HAVE_READLINKAT 1'], [])
 
 
+AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_FILE_H], [${loc_sys_file_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_RANDOM_H], [${loc_sys_random_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_ENDIAN_H], [${loc_endian_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_ERR_H], [${loc_err_h}])
@@ -63,6 +71,7 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_STRNLEN], [${loc_strnlen}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRNDUP], [${loc_strndup}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRNCASECMP], [${loc_strncasecmp}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRCASESTR], [${loc_strcasestr}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_STRLCAT], [${loc_strlcat}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_MEMMEM], [${loc_memmem}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FLOCK], [${loc_flock}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_GETRANDOM], [${loc_getrandom}])

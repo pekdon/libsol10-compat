@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define INCLUDE_MK_PREFIX  ".include \"../../mk/"
 #define INCLUDE_PREFIX  ".include \"../../"
@@ -28,7 +29,7 @@ static char *path_join(const char *dir, const char *name)
 	return strdup(buf);
 }
 
-static char *path_replace(const char *from, const char *to)
+static void path_replace(const char *from, const char *to)
 {
 	char to_orig[PATH_MAX] = {0};
 	snprintf(to_orig, sizeof(to_orig), "%s.orig", to);

@@ -1,7 +1,8 @@
 #ifndef _LIBSOL10_COMPAT_FCNTL_H_
 #define _LIBSOL10_COMPAT_FCNTL_H_
 
-#include_next <fcntl.h>
+/* not using include_next due to confusion between fcntl.h and sys/fcntl.h */
+#include "/usr/include/fcntl.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -2,6 +2,7 @@
 #define _LIBSOL10_COMPAT_SYS_RANDOM_H_
 
 #include "libsol10-compat-config.h"
+#include <sys/types.h> /* ssize_t */
 
 #ifdef LIBSOL10_COMPAT_HAVE_SYS_RANDOM_H
 #include_next <sys/random.h>

@@ -94,3 +94,28 @@ void* memmem(const void* haystack, size_t haystackn,
 	return NULL;
 }
 #endif /* LIBSOL10_COMPAT_HAVE_MEMMEM */
+
+#ifndef LIBSOL10_COMPAT_HAVE_STRLCAT
+size_t strlcat(char* dst, const char* src, size_t dstsize)
+{
+	size_t src_len = strlen(src);
+	if (dstsize == 0) {
+		return src_len;
+	}
+
+	size_t dst_len = 0;
+	for (; dst_len < dstsize; dst_len++) {
+		if (dst[dst_len] == '\0') {
+			break;
+		}
+	}
+
+	if (dst_len < dstsize) {
+		size_t len = dstsize - dst_len - 1;
+		memcpy(dst + dst_len, src, len);
+		dst[dst_len + len] = '\0';
+	}
+
+	return dst_len + src_len;
+}
+#endif /* LIBSOL10_COMPAT_HAVE_STRLCAT */

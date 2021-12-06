@@ -4,7 +4,7 @@
 #include "libsol10-compat-config.h"
 
 #ifdef LIBSOL10_COMPAT_HAVE_SYS_FILE_H
-#include_next <sys/random.h>
+#include_next <sys/file.h>
 #endif /* LIBSOL10_COMPAT_HAVE_SYS_FILE_H */
 
 #ifdef __cplusplus
