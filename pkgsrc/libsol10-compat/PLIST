@@ -13,6 +13,7 @@ include/libsol10-compat/syslog.h
 include/libsol10-compat/sys/feature_tests.h
 include/libsol10-compat/sys/file.h
 include/libsol10-compat/sys/random.h
+include/libsol10-compat/termios.h
 include/libsol10-compat/time.h
 include/libsol10-compat/unistd.h
 lib/libsol10_compat.la

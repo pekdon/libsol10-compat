@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -261,6 +262,11 @@ void test_sys_random(void)
 	assert(memcmp(buf, zerobuf, 128) != 0);
 }
 
+void test_termios(void)
+{
+	/* forkpty */
+}
+
 void test_time(void)
 {
 	time_t loc, gm;
@@ -310,6 +316,7 @@ int main(int argc, char *argv[])
 	test_strings();
 	test_sys_file();
 	test_sys_random();
+	test_termios();
 	test_time();
 	test_unistd();
 	printf("OK\n");

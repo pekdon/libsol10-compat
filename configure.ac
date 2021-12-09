@@ -47,6 +47,12 @@ AC_CHECK_FUNC([flock],
 	      [loc_flock='#define LIBSOL10_COMPAT_HAVE_FLOCK 1'], [])
 AC_CHECK_FUNC([getrandom],
 	      [loc_getrandom='#define LIBSOL10_COMPAT_HAVE_GETRANDOM 1'], [])
+AC_CHECK_FUNC([openpty],
+	      [loc_openpty='#define LIBSOL10_COMPAT_HAVE_OPENPTY 1'], [])
+AC_CHECK_FUNC([login_tty],
+	      [loc_login_tty='#define LIBSOL10_COMPAT_HAVE_LOGIN_TTY 1'], [])
+AC_CHECK_FUNC([forkpty],
+	      [loc_forkpty='#define LIBSOL10_COMPAT_HAVE_FORKPTY 1'], [])
 AC_CHECK_FUNC([timelocal],
 	      [loc_timelocal='#define LIBSOL10_COMPAT_HAVE_TIMELOCAL 1'], [])
 AC_CHECK_FUNC([timegm],
@@ -75,6 +81,9 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_STRLCAT], [${loc_strlcat}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_MEMMEM], [${loc_memmem}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FLOCK], [${loc_flock}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_GETRANDOM], [${loc_getrandom}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_OPENPTY], [${loc_openpty}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_LOGIN_TTY], [${loc_login_tty}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_FORKPTY], [${loc_forkpty}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_TIMELOCAL], [${loc_timelocal}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_TIMEGM], [${loc_timegm}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FACCESSAT], [${loc_faccessat}])
