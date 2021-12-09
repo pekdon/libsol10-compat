@@ -250,15 +250,21 @@ void test_sys_random(void)
 {
 	/* getrandom */
 	ssize_t n;
-	char *buf[128], zerobuf[128];
-	memset(buf, 0, sizeof(buf));
+	char buf[128], zerobuf[128];
 	memset(zerobuf, 0, sizeof(zerobuf));
 
+	memset(buf, 0, sizeof(buf));
 	n = getrandom(buf, sizeof(buf), 0);
 	assert(n > 0);
 	assert(memcmp(buf, zerobuf, 128) != 0);
+	memset(buf, 0, sizeof(buf));
 	n = getrandom(buf, sizeof(buf), GRND_RANDOM);
 	assert(n > 0);
+	assert(memcmp(buf, zerobuf, 128) != 0);
+
+	/* getentropy */
+	memset(buf, 0, sizeof(buf));
+	assert(getentropy(buf, sizeof(buf)) == 0);
 	assert(memcmp(buf, zerobuf, 128) != 0);
 }
 

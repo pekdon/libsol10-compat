@@ -47,6 +47,8 @@ AC_CHECK_FUNC([flock],
 	      [loc_flock='#define LIBSOL10_COMPAT_HAVE_FLOCK 1'], [])
 AC_CHECK_FUNC([getrandom],
 	      [loc_getrandom='#define LIBSOL10_COMPAT_HAVE_GETRANDOM 1'], [])
+AC_CHECK_FUNC([getentropy],
+	      [loc_getentropy='#define LIBSOL10_COMPAT_HAVE_GETENTROPY 1'], [])
 AC_CHECK_FUNC([openpty],
 	      [loc_openpty='#define LIBSOL10_COMPAT_HAVE_OPENPTY 1'], [])
 AC_CHECK_FUNC([login_tty],
@@ -81,6 +83,7 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_STRLCAT], [${loc_strlcat}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_MEMMEM], [${loc_memmem}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FLOCK], [${loc_flock}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_GETRANDOM], [${loc_getrandom}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_GETENTROPY], [${loc_getentropy}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_OPENPTY], [${loc_openpty}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_LOGIN_TTY], [${loc_login_tty}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FORKPTY], [${loc_forkpty}])

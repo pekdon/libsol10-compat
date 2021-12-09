@@ -19,6 +19,10 @@ extern "C" {
 extern ssize_t getrandom(void* buf, size_t n, unsigned int flags);
 #endif /* LIBSOL10_COMPAT_HAVE_GETRANDOM */
 
+#ifndef LIBSOL10_COMPAT_HAVE_GETENTROPY
+extern int getentropy(void* buf, size_t n);
+#endif /* LIBSOL10_COMPAT_HAVE_GETENTROPY */
+
 #ifdef __cplusplus
 }
 #endif
