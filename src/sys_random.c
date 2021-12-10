@@ -1,3 +1,4 @@
+#include <time.h>
 #include <sys/random.h>
 #include <fcntl.h>
 #include <unistd.h>

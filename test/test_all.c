@@ -2,6 +2,7 @@
 #define _GNU_SOURCE
 #endif /* _GNU_SOURCE */
 
+#include <time.h>
 #include <sys/file.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -17,7 +18,6 @@
 #include <string.h>
 #include <strings.h>
 #include <termios.h>
-#include <time.h>
 #include <unistd.h>
 
 void test_dirent(void)
