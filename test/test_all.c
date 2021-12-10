@@ -20,9 +20,22 @@
 #include <termios.h>
 #include <unistd.h>
 
+static void progress(const char *fmt, ...)
+{
+	fprintf(stdout, "%d: ", time(NULL));
+
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stdout, fmt, ap);
+	va_end(ap);
+
+	fprintf(stdout, "\n");
+}
+
 void test_dirent(void)
 {
 	/* dirfd */
+	progress("dirent.h dirfd");
 	DIR *dh;
 	dh = opendir(".");
 	assert(dh != NULL);
@@ -33,6 +46,7 @@ void test_dirent(void)
 void test_endian(void)
 {
 #ifdef __BYTE_ORDER
+	progress("endian.h #define");
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	assert(__BYTE_ORDER == __LITTLE_ENDIAN);
 	assert(__BYTE_ORDER != __BIG_ENDIAN);
@@ -60,6 +74,7 @@ void test_fcntl(void)
 void test_stdio(void)
 {
 	/* getdelim */
+	progress("stdio.h getdelim");
 	{
 		size_t linecapp = 0;
 		char *line = NULL;
@@ -98,6 +113,7 @@ void test_stdio(void)
 	}
 
 	/* getline */
+	progress("stdio.h getline");
 	{
 		size_t linecapp = 80;
 		char *line = malloc(linecapp);
@@ -122,6 +138,7 @@ void test_stdio(void)
 void test_stdlib(void)
 {
 	/* posix_memalign */
+	progress("stdlib.h posix_memalign");
 	{
 		void *mem;
 		for (int i = 0; i < 64; i++) {
@@ -135,10 +152,12 @@ void test_stdlib(void)
 void test_string(void)
 {
 	/* strnlen */
+	progress("string.h strnlen");
 	assert(4 == strnlen("test", 5));
 	assert(2 == strnlen("test", 2));
 
 	/* strndup */
+	progress("string.h strndup");
 	{
 		char *copy;
 		copy = strndup("test", 5);
@@ -152,6 +171,7 @@ void test_string(void)
 	}
 
 	/* strcasestr */
+	progress("string.h strcasestr");
 	{
 		char *pos;
 		pos = strcasestr("my TeSt string", "test");
@@ -164,6 +184,7 @@ void test_string(void)
 	}
 
 	/* memmem */
+	progress("string.h memmem");
 	{
 		void *pos;
 		pos = memmem("my test string", 14, "test", 4);
@@ -179,6 +200,7 @@ void test_string(void)
 void test_strings(void)
 {
 	/* strncasecmp */
+	progress("strings.h strncasecmp");
 	assert(0 == strncasecmp("TEST", "test", 5));
 	assert(0 == strncasecmp("te", "TEST", 2));
 	assert(0 != strncasecmp("test", "other", 5));
@@ -192,14 +214,14 @@ static void test_sys_file_child(int pfd[], int op)
 	assert(fd > -1);
 	int tmp;
 	assert(sizeof(int) == read(pfd[0], &tmp, sizeof(int)));
-	printf("waiting for lock %d\n", getpid());
+	progress("waiting for lock %d", getpid());
 	flock(fd, op);
-	printf("locked %d\n", getpid());
+	progress("locked %d", getpid());
 	assert(sizeof(int) == write(pfd[1], &tmp, sizeof(int)));
 	assert(sizeof(int) == read(pfd[0], &tmp, sizeof(int)));
 	sleep(1);
 	flock(fd, LOCK_UN);
-	printf("unlocked %d\n", getpid());
+	progress("unlocked %d", getpid());
 	assert(sizeof(int) == write(pfd[1], &tmp, sizeof(int)));
 	close(fd);
 	write(pfd[1], &fd, sizeof(int));
@@ -210,6 +232,7 @@ static void test_sys_file_child(int pfd[], int op)
 void test_sys_file(void)
 {
 	/* flock */
+	progress("sys/file.h flock");
 	int p1[2];
 	assert(0 == pipe(p1));
 	pid_t c1 = fork();
@@ -249,6 +272,7 @@ void test_sys_file(void)
 void test_sys_random(void)
 {
 	/* getrandom */
+	progress("sys/random.h getrandom");
 	ssize_t n;
 	char buf[128], zerobuf[128];
 	memset(zerobuf, 0, sizeof(zerobuf));
@@ -263,6 +287,7 @@ void test_sys_random(void)
 	assert(memcmp(buf, zerobuf, 128) != 0);
 
 	/* getentropy */
+	progress("sys/random.h getentropy");
 	memset(buf, 0, sizeof(buf));
 	assert(getentropy(buf, sizeof(buf)) == 0);
 	assert(memcmp(buf, zerobuf, 128) != 0);
@@ -289,15 +314,20 @@ void test_time(void)
 	tm.tm_yday = 4;
 	tm.tm_isdst = 0;
 
-	loc = timelocal(&tm);
-	gm = timegm(&tm);
-
 	tzset();
-	assert(gm == expected_time);
+
+	/* timelocal */
+	progress("time.h timelocal");
+	loc = timelocal(&tm);
 	/* currently fails on FreeBSD */
 #ifndef __FreeBSD__
 	assert(loc == expected_time + timezone);
 #endif /* __FreeBSD__ */
+
+	/* timegm */
+	progress("time.h timegm");
+	gm = timegm(&tm);
+	assert(gm == expected_time);
 }
 
 void test_unistd(void)
@@ -313,21 +343,47 @@ void test_unistd(void)
 	 */
 }
 
+int in_argv(const char *search, int argc, char *argv[])
+{
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], search) == 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+struct suite {
+	void(*fun)();
+	const char *name;
+};
+
 int main(int argc, char *argv[])
 {
-	test_dirent();
-	test_endian();
-	test_err();
-	test_fcntl();
-	test_stdio();
-	test_stdlib();
-	test_string();
-	test_strings();
-	test_sys_file();
-	test_sys_random();
-	test_termios();
-	test_time();
-	test_unistd();
-	printf("OK\n");
+	int all = (argc == 1) || in_argv("all", argc, argv);
+	struct suite suites[] = {
+		{test_dirent, "dirent.h"},
+		{test_endian, "endian.h"},
+		{test_err, "err.h"},
+		{test_fcntl, "fcntl.h"},
+		{test_stdio, "stdio.h"},
+		{test_stdlib, "stdlib.h"},
+		{test_string, "string.h"},
+		{test_strings, "strings.h"},
+		{test_sys_file, "sys/file.h"},
+		{test_sys_random, "sys/random.h"},
+		{test_termios, "termios.h"},
+		{test_time, "time.h"},
+		{test_unistd, "unistd.h"},
+		{NULL, NULL}
+	};
+	for (int i = 0; suites[i].name; i++) {
+		if (all || in_argv(suites[i].name, argc, argv)) {
+			progress(">>> %s", suites[i].name);
+			suites[i].fun();
+			progress("<<< %s", suites[i].name);
+		}
+	}
+	progress("DONE");
 	return 0;
 }
