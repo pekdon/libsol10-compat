@@ -295,7 +295,46 @@ void test_sys_random(void)
 
 void test_termios(void)
 {
+	/* openpty */
+	progress("termios.h openpty");
+	{
+		int primary, slave;
+		assert(0 == openpty(&primary, &slave, NULL, NULL, NULL));
+		close(primary);
+		close(slave);
+	}
+
 	/* forkpty */
+	progress("termios.h forkpty");
+	{
+		int primary;
+		pid_t pid = forkpty(&primary, NULL, NULL, NULL);
+		assert(pid > -1);
+		if (pid == 0) {
+			char *const argv[] = { "/bin/sh", NULL };
+			execv(argv[0], argv);
+			exit(1);
+		}
+		sleep(1);
+		size_t len;
+		char buf[512];
+		memset(buf, '\0', sizeof(buf));
+		len = read(primary, buf, sizeof(buf) - 1);
+		progress("io read %d: \"%s\"", len, buf);
+		write(primary, "uptime\n", 7);
+		sleep(1);
+		memset(buf, '\0', sizeof(buf));
+		len = read(primary, buf, sizeof(buf) - 1);
+		progress("io read %d: \"%s\"", len, buf);
+		write(primary, "exit\n", 5);
+		memset(buf, '\0', sizeof(buf));
+		len = read(primary, buf, sizeof(buf) - 1);
+		progress("io read %d: \"%s\"", len, buf);
+		close(primary);
+		int ret;
+		assert(pid == waitpid(pid, &ret, 0));
+		assert(0 == WEXITSTATUS(ret));
+	}
 }
 
 void test_time(void)

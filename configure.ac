@@ -64,6 +64,7 @@ AC_CHECK_FUNC([faccessat],
 AC_CHECK_FUNC([readlinkat],
 	      [loc_readlinkat='#define LIBSOL10_COMPAT_HAVE_READLINKAT 1'], [])
 
+AC_CHECK_LIB([util], [forkpty])
 
 AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_FILE_H], [${loc_sys_file_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_RANDOM_H], [${loc_sys_random_h}])

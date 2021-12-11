@@ -62,6 +62,7 @@ int openpty(int *amaster, int *aslave, char *name,
 	if (name) {
 		strcpy(name, slave_name);
 	}
+	return 0;
 
 error:
 	if (slave != -1) {
