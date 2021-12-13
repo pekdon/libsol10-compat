@@ -20,9 +20,16 @@
 #include <termios.h>
 #include <unistd.h>
 
+static int flush_fork(void)
+{
+	fflush(stdout);
+	fflush(stderr);
+	return fork();
+}
+
 static void progress(const char *fmt, ...)
 {
-	fprintf(stdout, "%d: ", time(NULL));
+	fprintf(stdout, "%d (%d): ", time(NULL), getpid());
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -235,14 +242,14 @@ void test_sys_file(void)
 	progress("sys/file.h flock");
 	int p1[2];
 	assert(0 == pipe(p1));
-	pid_t c1 = fork();
+	pid_t c1 = flush_fork();
 	assert(c1 > -1);
 	if (c1 == 0) {
 		test_sys_file_child(p1, LOCK_EX);
 	}
 	int p2[2];
 	assert(0 == pipe(p2));
-	pid_t c2 = fork();
+	pid_t c2 = flush_fork();
 	assert(c2 > -1);
 	if (c2 == 0) {
 		test_sys_file_child(p2, LOCK_EX);
