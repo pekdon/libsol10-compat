@@ -22,4 +22,4 @@ extern ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 }
 #endif
 
-#endif /* _LIBSOL10_COMPAT_STDLIB_H_ */
+#endif /* _LIBSOL10_COMPAT_STDIO_H_ */
