@@ -10,7 +10,8 @@ HOMEPAGE=	https://github.com/pekdon/libsol10-compat/
 COMMENT=	Legacy OS compatability library0
 LICENSE=	mit
 
-HAS_CONFIGURE=		yes
+GNU_CONFIGURE=		yes
+CONFIGURE_ENV+=		SHELL=${TOOLS_PATH.sh}
 CONFIGURE_ARGS+=	--prefix=${PREFIX}
 PKGCONFIG_OVERRIDE+=	libsol10-compat.pc.in
 
