@@ -23,6 +23,14 @@ multimedia/dav1d
 multimedia/libbluray
 multimedia/mpv
 multimedia/x265
+# err.h paths.h
+net/nagios-plugin-dotpid
+# err.h
+net/nagios-plugin-dnsrbl
+# err.h
+net/nagios-plugin-dumpdates
+# err.h
+net/nagios-plugin-syncrepl
 net/glib-networking
 print/poppler
 print/poppler-glib
