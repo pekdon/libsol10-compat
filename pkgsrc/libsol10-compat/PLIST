@@ -5,6 +5,7 @@ include/libsol10-compat/endian.h
 include/libsol10-compat/err.h
 include/libsol10-compat/fcntl.h
 include/libsol10-compat/libsol10-compat-config.h
+include/libsol10-compat/paths.h
 include/libsol10-compat/stdio.h
 include/libsol10-compat/stdlib.h
 include/libsol10-compat/string.h

@@ -15,6 +15,8 @@ AC_CHECK_HEADER([endian.h],
 		[loc_endian_h='#define LIBSOL10_COMPAT_HAVE_ENDIAN_H 1'], [])
 AC_CHECK_HEADER([err.h],
 		[loc_err_h='#define LIBSOL10_COMPAT_HAVE_ERR_H 1'], [])
+AC_CHECK_HEADER([paths.h],
+		[loc_paths_h='#define LIBSOL10_COMPAT_HAVE_PATHS_H 1'], [])
 AC_CHECK_HEADER([strings.h],
 		[loc_strings_h='#define LIBSOL10_COMPAT_HAVE_STRINGS_H 1'], [])
 
@@ -70,6 +72,7 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_FILE_H], [${loc_sys_file_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_SYS_RANDOM_H], [${loc_sys_random_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_ENDIAN_H], [${loc_endian_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_ERR_H], [${loc_err_h}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_PATHS_H], [${loc_paths_h}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRINGS_H], [${loc_strings_h}])
 
 AC_SUBST([LIBSOL10_COMPAT_HAVE_DIRFD], [${loc_dirfd}])

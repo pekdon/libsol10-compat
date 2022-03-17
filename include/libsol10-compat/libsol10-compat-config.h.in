@@ -20,6 +20,9 @@
 
 /* fcntl.h */
 
+/* paths.h */
+@LIBSOL10_COMPAT_HAVE_PATHS_H@
+
 /* stdio.h */
 @LIBSOL10_COMPAT_HAVE_GETDELIM@
 @LIBSOL10_COMPAT_HAVE_GETLINE@
