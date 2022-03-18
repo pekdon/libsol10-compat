@@ -190,6 +190,32 @@ void test_string(void)
 		assert(NULL == strcasestr("my test", "missing"));
 	}
 
+	/* strsep */
+	progress("string.h strsep");
+	{
+		char buf[128];
+		char *stringp = NULL;
+		assert(NULL == strsep(&stringp, ","));
+		snprintf(buf, sizeof(buf), "");
+		stringp = buf;
+		assert(0 == strcmp("", strsep(&stringp, ",")));
+		assert(NULL == strsep(&stringp, ","));
+
+		snprintf(buf, sizeof(buf), "1,2,3");
+		stringp = buf;
+		assert(0 == strcmp("1", strsep(&stringp, ",")));
+		assert(0 == strcmp("2", strsep(&stringp, ",")));
+		assert(0 == strcmp("3", strsep(&stringp, ",")));
+		assert(NULL == strsep(&stringp, ","));
+
+		snprintf(buf, sizeof(buf), ",,3");
+		stringp = buf;
+		assert(0 == strcmp("", strsep(&stringp, ",")));
+		assert(0 == strcmp("", strsep(&stringp, ",")));
+		assert(0 == strcmp("3", strsep(&stringp, ",")));
+		assert(NULL == strsep(&stringp, ","));
+	}
+
 	/* memmem */
 	progress("string.h memmem");
 	{

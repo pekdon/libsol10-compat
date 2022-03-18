@@ -18,6 +18,9 @@ extern char* strndup(const char* s, size_t n);
 #ifndef LIBSOL10_COMPAT_HAVE_STRLCAT
 extern size_t strlcat(char* dst, const char* src, size_t dstsize);
 #endif /* LIBSOL10_COMPAT_HAVE_STRLCAT */
+#ifndef LIBSOL10_COMPAT_HAVE_STRSEP
+extern char* strsep(char **stringp, const char *delim);
+#endif /* LIBSOL10_COMPAT_HAVE_STRSEP */
 
 #ifdef _GNU_SOURCE
 #ifndef LIBSOL10_COMPAT_HAVE_STRCASESTR

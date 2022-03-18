@@ -43,6 +43,8 @@ AC_CHECK_FUNC([strcasestr],
 	      [loc_strcasestr='#define LIBSOL10_COMPAT_HAVE_STRCASESTR 1'], [])
 AC_CHECK_FUNC([strlcat],
 	      [loc_strlcat='#define LIBSOL10_COMPAT_HAVE_STRLCAT 1'], [])
+AC_CHECK_FUNC([strsep],
+	      [loc_strsep='#define LIBSOL10_COMPAT_HAVE_STRSEP 1'], [])
 AC_CHECK_FUNC([memmem],
 	      [loc_memmem='#define LIBSOL10_COMPAT_HAVE_MEMMEM 1'], [])
 AC_CHECK_FUNC([flock],
@@ -84,6 +86,7 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_STRNDUP], [${loc_strndup}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRNCASECMP], [${loc_strncasecmp}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRCASESTR], [${loc_strcasestr}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_STRLCAT], [${loc_strlcat}])
+AC_SUBST([LIBSOL10_COMPAT_HAVE_STRSEP], [${loc_strsep}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_MEMMEM], [${loc_memmem}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_FLOCK], [${loc_flock}])
 AC_SUBST([LIBSOL10_COMPAT_HAVE_GETRANDOM], [${loc_getrandom}])

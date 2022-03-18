@@ -119,3 +119,33 @@ size_t strlcat(char* dst, const char* src, size_t dstsize)
 	return dst_len + src_len;
 }
 #endif /* LIBSOL10_COMPAT_HAVE_STRLCAT */
+
+#ifndef LIBSOL10_COMPAT_HAVE_STRSEP
+char* strsep(char **stringp, const char *delim)
+{
+	char *curr, *p;
+	if (*stringp == NULL) {
+		return NULL;
+	}
+
+	curr = *stringp;
+	for (p = *stringp; *p != '\0'; p++) {
+		const char *c;
+		for (c = delim; *c != '\0'; c++) {
+			if (*p != *c) {
+				continue;
+			}
+			*p = '\0';
+			if (*(p + 1) == '\0') {
+				*stringp = NULL;
+			} else {
+				*stringp = p + 1;
+			}
+			return curr;
+		}
+	}
+	*stringp = NULL;
+	return curr;
+}
+
+#endif /* LIBSOL10_COMPAT_HAVE_STRSEP */
