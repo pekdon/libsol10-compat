@@ -101,7 +101,14 @@ AC_SUBST([LIBSOL10_COMPAT_HAVE_READLINKAT], [${loc_readlinkat}])
 
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([libsol10-compat.pc include/libsol10-compat/libsol10-compat-config.h Makefile include/Makefile src/Makefile util/Makefile test/Makefile])
+AC_CONFIG_FILES([libsol10-compat.pc
+		 include/libsol10-compat/libsol10-compat-config.h
+		 Makefile
+		 include/Makefile
+		 pkgsrc/Makefile
+		 src/Makefile
+		 util/Makefile
+		 test/Makefile])
 
 AC_ARG_ENABLE([tests], [--enable-tests    Enable tests],
 [case "${enableval}" in
