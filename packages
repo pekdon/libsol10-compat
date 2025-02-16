@@ -5,6 +5,7 @@ audio/pulseaudio
 devel/at-spi2-core
 devel/distcc
 devel/libdazzle
+devel/libuuid
 devel/pango
 # posix_memalign
 graphics/MesaLib
@@ -43,5 +44,4 @@ www/webkit-gtk
 x11/gtk3
 x11/libdrm
 x11/libxkbcommon
-x11/qt5-qtwebkit
 x11/xsm
